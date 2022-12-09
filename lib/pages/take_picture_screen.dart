@@ -55,20 +55,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             CameraView(
                 initializeControllerFuture: _initializeControllerFuture,
                 controller: _controller),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
                 width: 50,
                 height: 50,
                 decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                    const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                 child: TakePhotoButton(
                     initializeControllerFuture: _initializeControllerFuture,
                     controller: _controller,

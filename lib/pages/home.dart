@@ -18,11 +18,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Itadakimasu"),
+        title: const Text("Itadakimasu"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {Navigator.pushNamed(context, '/take/picture')},
-        child: Icon(Icons.photo_camera),
+        child: const Icon(Icons.photo_camera),
       ),
     );
   }

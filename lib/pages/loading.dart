@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 void main() async {
   runApp(const MaterialApp(
     home: LoadingScreen(),
@@ -17,14 +18,13 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> loadAssets(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 5), (() {
+    await Future.delayed(const Duration(seconds: 5), (() {
       Navigator.pushReplacementNamed(context, '/home');
     }));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
