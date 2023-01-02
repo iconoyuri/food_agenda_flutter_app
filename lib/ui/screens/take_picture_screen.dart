@@ -111,7 +111,7 @@ class TakePhotoButton extends StatelessWidget {
             if (!mounted) return;
 
             Navigator.pushNamed(context, '/display/picture',
-                arguments: {'imagePath': image.path});
+                arguments: {'image': image});
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);
