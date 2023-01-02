@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radio_group_v2/radio_group_v2.dart';
 
 class RegisterFood extends StatefulWidget {
   const RegisterFood({super.key});
@@ -9,13 +10,30 @@ class RegisterFood extends StatefulWidget {
 
 class _RegisterFoodState extends State<RegisterFood> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _label = TextEditingController();
+  TextEditingController food_eaten = TextEditingController();
+  TextEditingController water_quantity = TextEditingController();
+  TextEditingController towel_movement = TextEditingController();
+  TextEditingController health_problem = TextEditingController();
+  RadioGroupController eaten_fruits = RadioGroupController();
+
+  void getFormInfos() {
+    if (_formKey.currentState!.validate()) {
+      Map infos = {
+        "food_eaten": food_eaten.text,
+        "water_quantity": water_quantity.text,
+        "towel_movement": towel_movement.text,
+        "health_problem": health_problem.text,
+        "eaten_fruits": eaten_fruits.value,
+      };
+      print(infos);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double sizedBoxHeight = 10;
-    String radioGroup = 'yes';
     return Scaffold(
-      appBar: AppBar(title: Text('Save meal')),
+      appBar: AppBar(title: const Text('Save meal')),
       body: SafeArea(
         child: ListView(scrollDirection: Axis.vertical, children: <Widget>[
           Form(
@@ -23,11 +41,12 @@ class _RegisterFoodState extends State<RegisterFood> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextFormField(
-                    controller: _label,
-                    decoration:
-                        InputDecoration(filled: false, labelText: "Food eaten"),
+                    controller: food_eaten,
+                    decoration: const InputDecoration(
+                        filled: false, labelText: "Food eaten"),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -40,8 +59,8 @@ class _RegisterFoodState extends State<RegisterFood> {
                     height: sizedBoxHeight,
                   ),
                   TextFormField(
-                    controller: _label,
-                    decoration: InputDecoration(
+                    controller: water_quantity,
+                    decoration: const InputDecoration(
                         filled: false, labelText: "Quantity of water"),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
@@ -55,8 +74,8 @@ class _RegisterFoodState extends State<RegisterFood> {
                     height: sizedBoxHeight,
                   ),
                   TextFormField(
-                    controller: _label,
-                    decoration: InputDecoration(
+                    controller: towel_movement,
+                    decoration: const InputDecoration(
                         filled: false, labelText: "Number towel movement"),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
@@ -70,8 +89,8 @@ class _RegisterFoodState extends State<RegisterFood> {
                     height: sizedBoxHeight,
                   ),
                   TextFormField(
-                    controller: _label,
-                    decoration: InputDecoration(
+                    controller: health_problem,
+                    decoration: const InputDecoration(
                         filled: false, labelText: "Health problem"),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
@@ -87,28 +106,37 @@ class _RegisterFoodState extends State<RegisterFood> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("Did you eat Fruits ?"),
-                      RadioListTile(
-                        title: Text("Yes"),
-                        value: "yes",
-                        groupValue: radioGroup,
-                        onChanged: (value) {
-                          setState(() {
-                            radioGroup = value.toString();
-                          });
-                        },
+                      const Text("Did you eat fruits ?"),
+                      const SizedBox(
+                        height: 10,
                       ),
-                      RadioListTile(
-                        title: Text("No"),
-                        value: "no",
-                        groupValue: radioGroup,
-                        onChanged: (value) {
-                          setState(() {
-                            radioGroup = value.toString();
-                          });
-                        },
-                      ),
+                      RadioGroup(
+                        controller: eaten_fruits,
+                        values: const ["yes", "no"],
+                        indexOfDefault: 0,
+                        orientation: RadioGroupOrientation.Horizontal,
+                        decoration: const RadioGroupDecoration(
+                          spacing: 10.0,
+                          labelStyle: TextStyle(
+                            color: Colors.blue,
+                          ),
+                          activeColor: Colors.blue,
+                        ),
+                      )
                     ],
+                  ),
+                  SizedBox(
+                    height: sizedBoxHeight + 30,
+                  ),
+                  ElevatedButton(
+                    onPressed: getFormInfos,
+                    style: ElevatedButton.styleFrom(
+                      // primary: Colors.black,
+                      minimumSize: const Size.fromHeight(50), // NEW
+                    ),
+                    child: const Text(
+                      'Save',
+                    ),
                   )
                 ],
               ),

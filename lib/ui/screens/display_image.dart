@@ -42,7 +42,7 @@ class _DisplayImageState extends State<DisplayImage> {
 
   AlertDialog _registerDialog() {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Name the selection",
       ),
       content: Form(
@@ -70,7 +70,7 @@ class _DisplayImageState extends State<DisplayImage> {
             state.paintHistory = state.paintHistory;
             Navigator.pop(context);
           },
-          child: Text(
+          child: const Text(
             "Cancel",
           ),
         ),
@@ -90,7 +90,7 @@ class _DisplayImageState extends State<DisplayImage> {
               Navigator.pop(context);
             }
           },
-          child: Text(
+          child: const Text(
             "Done",
           ),
         ),
