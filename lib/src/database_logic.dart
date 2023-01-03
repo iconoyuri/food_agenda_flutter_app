@@ -29,4 +29,24 @@ class DatabaseLogic {
       ''', [currentDay]);
     return list[0]["name"];
   }
+
+  static Future<List<Map<String, dynamic>>> eatingDays() async {
+    print("finding eating days");
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<Map<String, dynamic>> list = await db.rawQuery(
+      '''
+          SELECT name, COUNT(name)
+          FROM _Day
+          JOIN Meal
+          ON id = id_day
+          GROUP BY id
+          ORDER BY id ASC
+      ''',
+    );
+    return list;
+  }
 }

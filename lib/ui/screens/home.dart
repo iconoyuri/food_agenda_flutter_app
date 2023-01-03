@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:itadakimasu/src/database_logic.dart';
-import 'package:itadakimasu/ui/screens/nav_drawer.dart';
+import 'package:itadakimasu/ui/views/nav_drawer.dart';
+import 'package:itadakimasu/ui/views/charts.dart';
 
 void main() => runApp(const MaterialApp(
       home: HomeScreen(),
@@ -18,6 +19,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String nextFood = "";
+  List<Map<String, dynamic>> daysList = [];
+  @override
+  void initState() {
+    super.initState();
+    updateState();
+    print("initializing state");
+  }
+
+  Future<void> updateState() async {
+    print("updating state");
+    await displayNextFoodPrediction();
+    await displayEatingDays();
+  }
+
+  Future<void> displayEatingDays() async {
+    List<Map<String, dynamic>> _daysList = await DatabaseLogic.eatingDays();
+    setState(() {
+      daysList = _daysList;
+    });
+  }
+
+  Future<void> displayNextFoodPrediction() async {
+    String _nextFood = await DatabaseLogic.predictDayMeal();
+    setState(() {
+      nextFood = _nextFood;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Itadakimasu"),
       ),
-      body: Container(
-        // foregroundDecoration:,
-        margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-        child: const HomeListView(),
+      body: RefreshIndicator(
+        onRefresh: updateState,
+        child: Container(
+          // foregroundDecoration:,
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          child: HomeListView(
+            nextFood: nextFood,
+            daysList: daysList,
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {Navigator.pushNamed(context, '/take/picture')},
@@ -39,27 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeListView extends StatefulWidget {
-  const HomeListView({
-    Key? key,
-  }) : super(key: key);
+  const HomeListView({Key? key, required this.nextFood, required this.daysList})
+      : super(key: key);
+
+  final String nextFood;
+  final List<Map<String, dynamic>> daysList;
 
   @override
   State<HomeListView> createState() => _HomeListViewState();
 }
 
 class _HomeListViewState extends State<HomeListView> {
-  String nextFood = "";
-
-  void displayNextFoodPrediction() async {
-    String _nextFood = await DatabaseLogic.predictDayMeal();
-    setState(() {
-      nextFood = _nextFood;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    displayNextFoodPrediction();
     return ListView(
       scrollDirection: Axis.vertical,
       children: <Widget>[
@@ -81,13 +109,16 @@ class _HomeListViewState extends State<HomeListView> {
                     fontSize: 18,
                     // fontStyle: FontStyle.italic,
                     fontFamily: 'QanelasSoft')),
-            Text(nextFood,
+            Text(widget.nextFood,
                 style: const TextStyle(
                     fontSize: 68,
                     color: Colors.amber,
-                    // fontStyle: FontStyle.italic,
                     fontFamily: 'QanelasSoft')),
-            // Text(DatabaseLogic.predictDayMeal())
+            EatingHabitsChart(
+              daysList: widget.daysList,
+            ),
+
+            // const EatingHabitsChart(),
           ],
         ),
       ],

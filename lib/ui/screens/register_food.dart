@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:intl/intl.dart';
 import 'package:itadakimasu/schemas/db_schemas.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:itadakimasu/src/database_logic.dart';
 
 class RegisterFood extends StatefulWidget {
   const RegisterFood({super.key});
@@ -25,25 +23,23 @@ class _RegisterFoodState extends State<RegisterFood> {
   void saveFormInfos() async {
     if (_formKey.currentState!.validate()) {
       String currentDay = DateFormat('EEEE').format(DateTime.now());
-      // Map infos = {
-      //   "day": currentDay,
-      //   "food_eaten": food_eaten.text,
-      //   "water_quantity": int.parse(water_quantity.text),
-      //   "towel_movement": int.parse(towel_movement.text),
-      //   "health_problem": health_problem.text,
-      //   "eaten_fruits": eaten_fruits.value == "yes" ? 1 : 0,
-      // };
-      print("test");
-      DatabaseLogic.predictDayMeal();
-      // await saveData(
-      //     infos["day"],
-      //     infos["food_eaten"],
-      //     infos["water_quantity"],
-      //     infos["towel_movement"],
-      //     infos["health_problem"],
-      //     infos["eaten_fruits"]);
-      // ignore: use_build_context_synchronously
-      // Navigator.pop(context);
+      Map infos = {
+        "day": currentDay,
+        "food_eaten": food_eaten.text,
+        "water_quantity": int.parse(water_quantity.text),
+        "towel_movement": int.parse(towel_movement.text),
+        "health_problem": health_problem.text,
+        "eaten_fruits": eaten_fruits.value == "yes" ? 1 : 0,
+      };
+      await saveData(
+          infos["day"],
+          infos["food_eaten"],
+          infos["water_quantity"],
+          infos["towel_movement"],
+          infos["health_problem"],
+          infos["eaten_fruits"]);
+
+      Navigator.pop(context);
     }
   }
 
@@ -63,13 +59,10 @@ class _RegisterFoodState extends State<RegisterFood> {
         id_healthPB: healthpbId,
         water_quantity: waterQuantity,
         nb_towel_mvt: towelMovement);
-    Database db = await meal.insertDatabase();
-    // final List<Map<String, dynamic>> meals = await db.query('Meal');
-    // print(meals);
+    await meal.insertDatabase();
   }
 
   String? validateIntForm(value) {
-    return null;
     if (value == null || value.isEmpty) return "Please enter a number";
     try {
       int.parse(value);
