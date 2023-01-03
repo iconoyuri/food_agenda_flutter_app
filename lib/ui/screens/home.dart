@@ -20,24 +20,68 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String nextFood = "";
+  String maxBadPrescription = "";
+  String maxGoodPrescription = "";
   List<Map<String, dynamic>> daysList = [];
+  List<Map<String, dynamic>> eatenFoods = [];
+
   @override
   void initState() {
     super.initState();
     updateState();
-    print("initializing state");
   }
 
   Future<void> updateState() async {
-    print("updating state");
     await displayNextFoodPrediction();
     await displayEatingDays();
+    await displayEatenFoods();
+    await maxBadProgram();
+    await maxGoodProgram();
+  }
+
+  Future<void> maxBadProgram() async {
+    int maxQuantityFood = 5;
+    int eatenQuantityFood = 0;
+    String _maxBadPrescription = "You can eat ";
+    List<Map<String, dynamic>> _mostEatenFoods =
+        await DatabaseLogic.descOrderedRawFoods();
+    for (Map<String, dynamic> a in _mostEatenFoods) {
+      if (!(eatenQuantityFood < maxQuantityFood)) break;
+      _maxBadPrescription = "$_maxBadPrescription ${a['name']},";
+      eatenQuantityFood += 2; // 2kg of food for each dish
+    }
+    setState(() {
+      maxBadPrescription = _maxBadPrescription;
+    });
+  }
+
+  Future<void> maxGoodProgram() async {
+    int maxQuantityFood = 5;
+    int eatenQuantityFood = 0;
+    String _maxGoodPrescription = "You must eat ";
+    List<Map<String, dynamic>> _mostEatenFoods =
+        await DatabaseLogic.descOrderedFoods();
+    for (Map<String, dynamic> a in _mostEatenFoods) {
+      if (!(eatenQuantityFood < maxQuantityFood)) break;
+      _maxGoodPrescription = "$_maxGoodPrescription ${a['name']},";
+      eatenQuantityFood += 2; // 2kg of food for each dish
+    }
+    setState(() {
+      maxGoodPrescription = _maxGoodPrescription;
+    });
   }
 
   Future<void> displayEatingDays() async {
     List<Map<String, dynamic>> _daysList = await DatabaseLogic.eatingDays();
     setState(() {
       daysList = _daysList;
+    });
+  }
+
+  Future<void> displayEatenFoods() async {
+    List<Map<String, dynamic>> _eatenFoods = await DatabaseLogic.eatenFoods();
+    setState(() {
+      eatenFoods = _eatenFoods;
     });
   }
 
@@ -63,6 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: HomeListView(
             nextFood: nextFood,
             daysList: daysList,
+            eatenFoods: eatenFoods,
+            maxBadPrescription: maxBadPrescription,
+            maxGoodPrescription: maxGoodPrescription,
           ),
         ),
       ),
@@ -75,11 +122,20 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeListView extends StatefulWidget {
-  const HomeListView({Key? key, required this.nextFood, required this.daysList})
+  const HomeListView(
+      {Key? key,
+      required this.nextFood,
+      required this.maxBadPrescription,
+      required this.maxGoodPrescription,
+      required this.daysList,
+      required this.eatenFoods})
       : super(key: key);
 
   final String nextFood;
+  final String maxBadPrescription;
+  final String maxGoodPrescription;
   final List<Map<String, dynamic>> daysList;
+  final List<Map<String, dynamic>> eatenFoods;
 
   @override
   State<HomeListView> createState() => _HomeListViewState();
@@ -116,9 +172,42 @@ class _HomeListViewState extends State<HomeListView> {
                     fontFamily: 'QanelasSoft')),
             EatingHabitsChart(
               daysList: widget.daysList,
+              chartTitle: 'Meals per day',
             ),
-
-            // const EatingHabitsChart(),
+            EatingHabitsChart(
+              daysList: widget.eatenFoods,
+              chartTitle: 'Most eaten foods',
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text("The max bad food recommendation",
+                style: TextStyle(
+                    fontSize: 18,
+                    // fontStyle: FontStyle.italic,
+                    fontFamily: 'QanelasSoft')),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              widget.maxBadPrescription,
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text("The max good food recommendation",
+                style: TextStyle(
+                    fontSize: 18,
+                    // fontStyle: FontStyle.italic,
+                    fontFamily: 'QanelasSoft')),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              widget.maxGoodPrescription,
+              style: const TextStyle(fontSize: 20),
+            )
           ],
         ),
       ],

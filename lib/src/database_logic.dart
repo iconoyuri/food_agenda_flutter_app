@@ -31,7 +31,6 @@ class DatabaseLogic {
   }
 
   static Future<List<Map<String, dynamic>>> eatingDays() async {
-    print("finding eating days");
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
       version: 1,
@@ -45,6 +44,67 @@ class DatabaseLogic {
           ON id = id_day
           GROUP BY id
           ORDER BY id ASC
+      ''',
+    );
+    return list;
+  }
+
+  static Future<List<Map<String, dynamic>>> eatenFoods() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<Map<String, dynamic>> list = await db.rawQuery(
+      '''
+          SELECT name, COUNT(name)
+          FROM Food
+          JOIN Meal
+          ON id = id_food
+          GROUP BY id
+      ''',
+    );
+    return list;
+  }
+
+  static Future<List<Map<String, dynamic>>> descOrderedRawFoods() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<Map<String, dynamic>> list = await db.rawQuery(
+      '''
+          SELECT name 
+          FROM Food
+          JOIN Meal 
+          ON id = id_food
+          GROUP BY name
+          ORDER BY COUNT(name) DESC
+      ''',
+    );
+    return list;
+  }
+
+  static Future<List<Map<String, dynamic>>> descOrderedFoods() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<Map<String, dynamic>> list = await db.rawQuery(
+      '''
+          SELECT name 
+          FROM Food
+          JOIN (
+            SELECT id_food 
+            FROM Meal
+            JOIN HealthProblem ON HealthProblem.id = Meal.id_healthPB
+            WHERE HealthProblem.name = ''
+          )
+          ON id = id_food
+          GROUP BY name
+          ORDER BY COUNT(name) DESC
       ''',
     );
     return list;
