@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:intl/intl.dart';
@@ -26,21 +28,40 @@ class _RegisterFoodState extends State<RegisterFood> {
       Map infos = {
         "day": currentDay,
         "food_eaten": food_eaten.text,
-        "water_quantity": water_quantity.text,
-        "towel_movement": towel_movement.text,
+        "water_quantity": int.parse(water_quantity.text),
+        "towel_movement": int.parse(towel_movement.text),
         "health_problem": health_problem.text,
-        "eaten_fruits": eaten_fruits.value,
+        "eaten_fruits": eaten_fruits.value == "yes" ? 1 : 0,
       };
-      saveData();
+      saveData(
+          infos["day"],
+          infos["food_eaten"],
+          infos["water_quantity"],
+          infos["towel_movement"],
+          infos["health_problem"],
+          infos["eaten_fruits"]);
     }
   }
 
-  Future<void> saveData() async {
-    Food food = Food(id: 2, name: "eru");
-    Database db = await food.insertDatabase();
-    print("insertion ok");
-    final List<Map<String, dynamic>> maps = await db.query('Food');
-    print(maps);
+  Future<void> saveData(String _day, String foodEaten, int waterQuantity,
+      int towelMovement, String healthProblem, int eatingFruits) async {
+    Food food = Food(name: foodEaten);
+    int foodId = await food.insertDatabase();
+    Day day = Day(name: _day);
+    int dayId = await day.insertDatabase();
+    HealthPB healthPB = HealthPB(name: healthProblem);
+    int healthpbId = await healthPB.insertDatabase();
+
+    Meal meal = Meal(
+        fruits_eaten: eatingFruits,
+        id_day: dayId,
+        id_food: foodId,
+        id_healthPB: healthpbId,
+        water_quantity: waterQuantity,
+        nb_towel_mvt: towelMovement);
+    Database db = await meal.insertDatabase();
+    // final List<Map<String, dynamic>> meals = await db.query('Meal');
+    // print(meals);
   }
 
   @override
