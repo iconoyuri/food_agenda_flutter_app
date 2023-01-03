@@ -43,40 +43,44 @@ Future<void> createDatabase() async {
     join(await getDatabasesPath(), 'food_recommendation.db'),
     onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.
-      return db.execute(
+      db.execute(
+        '''
+           CREATE TABLE HealthProblem(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+          ); ''',
+      );
+      db.execute(
         '''
           CREATE TABLE Food(
-            id INT,
-            name VARCHAR(50),
-            PRIMARY KEY(id)
-          );
-
-          CREATE TABLE Health_Problem(
-            id INT,
-            name VARCHAR(50),
-            PRIMARY KEY(id)
-          ); 
-
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+          );''',
+      );
+      db.execute(
+        '''
           CREATE TABLE _Day(
-            id INT,
-            nom VARCHAR(50) NOT NULL,
-            PRIMARY KEY(id)
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
           );
-
+        ''',
+      );
+      db.execute(
+        '''
           CREATE TABLE Meal(
             id_food INT,
             id_healthPB INT,
             id_day INT,
             water_quantity INT,
-            fruits INT,
-            nb_towel INT,
-            PRIMARY KEY(id_food, id_healthPB, id_day),
+            fruits_eaten INT,
+            nb_towel_mvt INT,
             FOREIGN KEY(id_food) REFERENCES Food(id),
             FOREIGN KEY(id_healthPB) REFERENCES Health_Problem(id),
             FOREIGN KEY(id_day) REFERENCES _Day(id)
           );
-''',
+        ''',
       );
+      return null;
     },
     version: 1,
   );
