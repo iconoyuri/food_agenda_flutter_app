@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
+import 'package:intl/intl.dart';
+import 'package:itadakimasu/schemas/db_schemas.dart';
+import 'package:sqflite/sqflite.dart';
 
 class RegisterFood extends StatefulWidget {
   const RegisterFood({super.key});
@@ -17,16 +20,27 @@ class _RegisterFoodState extends State<RegisterFood> {
   RadioGroupController eaten_fruits = RadioGroupController();
 
   void getFormInfos() {
-    if (_formKey.currentState!.validate()) {
+    // if (_formKey.currentState!.validate()) {
+    if (true) {
+      String currentDay = DateFormat('EEEE').format(DateTime.now());
       Map infos = {
+        "day": currentDay,
         "food_eaten": food_eaten.text,
         "water_quantity": water_quantity.text,
         "towel_movement": towel_movement.text,
         "health_problem": health_problem.text,
         "eaten_fruits": eaten_fruits.value,
       };
-      print(infos);
+      saveData();
     }
+  }
+
+  Future<void> saveData() async {
+    Food food = Food(id: 2, name: "eru");
+    Database db = await food.insertDatabase();
+    print("insertion ok");
+    final List<Map<String, dynamic>> maps = await db.query('Food');
+    print(maps);
   }
 
   @override
