@@ -4,21 +4,21 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Food {
-  final int id;
+  // final int id;
   final String name;
 
   const Food({
-    required this.id,
+    // required this.id,
     required this.name,
   });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'name': name,
     };
   }
 
-  Future<Database> insertDatabase() async {
+  Future<int> insertDatabase() async {
     // Get a reference to the database.
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
@@ -30,26 +30,28 @@ class Food {
       toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
-    return db;
+    final List<Map<String, dynamic>> list =
+        await db.query("Food", where: 'name = "$name"');
+    return list[0]["id"];
   }
 }
 
 class HealthPB {
-  final int id;
+  // final int id;
   final String name;
 
   const HealthPB({
-    required this.id,
+    // required this.id,
     required this.name,
   });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'name': name,
     };
   }
 
-  Future<void> insertDog() async {
+  Future<int> insertDatabase() async {
     // Get a reference to the database.
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
@@ -57,29 +59,32 @@ class HealthPB {
     );
     // In this case, replace any previous data.
     await db.insert(
-      'Health_Problem',
+      'HealthProblem',
       toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+    final List<Map<String, dynamic>> list =
+        await db.query("HealthProblem", where: 'name = "$name"');
+    return list[0]["id"];
   }
 }
 
 class Day {
-  final int id;
+  // final int id;
   final String name;
 
   const Day({
-    required this.id,
+    // required this.id,
     required this.name,
   });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'name': name,
     };
   }
 
-  Future<void> insertDog() async {
+  Future<int> insertDatabase() async {
     // Get a reference to the database.
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
@@ -89,8 +94,11 @@ class Day {
     await db.insert(
       '_Day',
       toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+    final List<Map<String, dynamic>> list =
+        await db.query("_Day", where: 'name = "$name"');
+    return list[0]["id"];
   }
 }
 
@@ -121,7 +129,7 @@ class Meal {
     };
   }
 
-  Future<void> insertDog() async {
+  Future<Database> insertDatabase() async {
     // Get a reference to the database.
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
@@ -131,7 +139,8 @@ class Meal {
     await db.insert(
       'Meal',
       toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+    return db;
   }
 }
