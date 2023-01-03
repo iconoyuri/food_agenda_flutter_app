@@ -21,9 +21,8 @@ class _RegisterFoodState extends State<RegisterFood> {
   TextEditingController health_problem = TextEditingController();
   RadioGroupController eaten_fruits = RadioGroupController();
 
-  void getFormInfos() {
-    // if (_formKey.currentState!.validate()) {
-    if (true) {
+  void saveFormInfos() async {
+    if (_formKey.currentState!.validate()) {
       String currentDay = DateFormat('EEEE').format(DateTime.now());
       Map infos = {
         "day": currentDay,
@@ -33,13 +32,15 @@ class _RegisterFoodState extends State<RegisterFood> {
         "health_problem": health_problem.text,
         "eaten_fruits": eaten_fruits.value == "yes" ? 1 : 0,
       };
-      saveData(
+      await saveData(
           infos["day"],
           infos["food_eaten"],
           infos["water_quantity"],
           infos["towel_movement"],
           infos["health_problem"],
           infos["eaten_fruits"]);
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
     }
   }
 
@@ -62,6 +63,16 @@ class _RegisterFoodState extends State<RegisterFood> {
     Database db = await meal.insertDatabase();
     // final List<Map<String, dynamic>> meals = await db.query('Meal');
     // print(meals);
+  }
+
+  String? validateIntForm(value) {
+    if (value == null || value.isEmpty) return "Please enter a number";
+    try {
+      int.parse(value);
+    } on FormatException {
+      return "Please enter a valid number";
+    }
+    return null;
   }
 
   @override
@@ -94,28 +105,24 @@ class _RegisterFoodState extends State<RegisterFood> {
                     height: sizedBoxHeight,
                   ),
                   TextFormField(
-                    controller: water_quantity,
-                    decoration: const InputDecoration(
-                        filled: false, labelText: "Quantity of water"),
-                    // The validator receives the text that the user has entered.
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
+                      controller: water_quantity,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          filled: false, labelText: "Quantity of water"),
+                      // The validator receives the text that the user has entered.
+                      validator: validateIntForm),
                   SizedBox(
                     height: sizedBoxHeight,
                   ),
                   TextFormField(
                     controller: towel_movement,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                         filled: false, labelText: "Number towel movement"),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter a number';
                       }
                       return null;
                     },
@@ -123,17 +130,10 @@ class _RegisterFoodState extends State<RegisterFood> {
                   SizedBox(
                     height: sizedBoxHeight,
                   ),
-                  TextFormField(
+                  TextField(
                     controller: health_problem,
                     decoration: const InputDecoration(
                         filled: false, labelText: "Health problem"),
-                    // The validator receives the text that the user has entered.
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
                   ),
                   SizedBox(
                     height: sizedBoxHeight + 20,
@@ -164,7 +164,7 @@ class _RegisterFoodState extends State<RegisterFood> {
                     height: sizedBoxHeight + 30,
                   ),
                   ElevatedButton(
-                    onPressed: getFormInfos,
+                    onPressed: saveFormInfos,
                     style: ElevatedButton.styleFrom(
                       // primary: Colors.black,
                       minimumSize: const Size.fromHeight(50), // NEW
