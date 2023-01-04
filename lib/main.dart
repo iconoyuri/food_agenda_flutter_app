@@ -6,7 +6,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:itadakimasu/ui/screens/home.dart';
 import 'package:itadakimasu/ui/screens/loading.dart';
 import 'package:itadakimasu/ui/screens/take_picture_screen.dart';
-import 'package:itadakimasu/ui/screens/display_picture_screen.dart';
 import 'package:itadakimasu/ui/screens/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
 
@@ -16,21 +15,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await createDatabase();
 
-  // O_incrementCounterbtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
-
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
       '/': ((context) => const LoadingScreen()),
       '/home': ((context) => const HomeScreen()),
-      '/take/picture': ((context) => TakePictureScreen(
-            camera: firstCamera,
-          )),
-      '/display/picture': ((context) => const DisplayPictureScreen()),
+      '/take/picture': ((context) => const TakePictureScreen()),
+      // '/display/picture': ((context) => const DisplayPictureScreen()),
       '/annotation': ((context) => const PickerImage()),
       '/save/meal': ((context) => const RegisterFood()),
     },
@@ -39,7 +30,7 @@ Future<void> main() async {
 
 Future<void> createDatabase() async {
   // Get a reference to the database.
-  final db = await openDatabase(
+  await openDatabase(
     join(await getDatabasesPath(), 'food_recommendation.db'),
     onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.

@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 class DatabaseLogic {
   static Future<String> predictDayMeal() async {
     String currentDay = DateFormat('EEEE').format(DateTime.now());
-
     final db = await openDatabase(
       join(await getDatabasesPath(), 'food_recommendation.db'),
       version: 1,

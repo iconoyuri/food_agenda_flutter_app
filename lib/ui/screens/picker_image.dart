@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:itadakimasu/ui/screens/display_image.dart';
+import 'package:itadakimasu/ui/screens/display_picture_screen.dart';
 import 'dart:io';
 
-class PickerImage extends StatefulWidget {
-  const PickerImage({super.key});
+class TakePictureScreen extends StatefulWidget {
+  const TakePictureScreen({super.key});
 
   @override
-  State<PickerImage> createState() => _PickerImageState();
+  State<TakePictureScreen> createState() => _TakePictureScreenState();
 }
 
-class _PickerImageState extends State<PickerImage> {
+class _TakePictureScreenState extends State<TakePictureScreen> {
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -22,7 +22,7 @@ class _PickerImageState extends State<PickerImage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DisplayImage(image: imageFinal)));
+                builder: (context) => DisplayPictureScreen(image: imageFinal)));
       });
     } on PlatformException catch (e) {
       print("Failed to pick image $e");
@@ -32,7 +32,7 @@ class _PickerImageState extends State<PickerImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Image Annotation")),
+      appBar: AppBar(title: Text("Food recognition")),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
