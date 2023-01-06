@@ -180,6 +180,8 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
           height: data["height"],
           weight: data["weight"]);
       user.insertDatabase();
+
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 }
