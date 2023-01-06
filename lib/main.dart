@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:itadakimasu/ui/screens/home.dart';
 import 'package:itadakimasu/ui/screens/loading.dart';
-import 'package:itadakimasu/ui/screens/take_picture_screen.dart';
+import 'package:itadakimasu/ui/screens/food_recognition_main_screen.dart';
 import 'package:itadakimasu/ui/screens/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
 
@@ -17,9 +17,10 @@ Future<void> main() async {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
+      // TODO : change this route to "/"
       '/': ((context) => const LoadingScreen()),
       '/home': ((context) => const HomeScreen()),
-      '/take/picture': ((context) => const TakePictureScreen()),
+      '/recognition': ((context) => const RecognitionMainScreen()),
       // '/display/picture': ((context) => const DisplayPictureScreen()),
       '/annotation': ((context) => const PickerImage()),
       '/save/meal': ((context) => const RegisterFood()),

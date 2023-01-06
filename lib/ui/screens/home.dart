@@ -32,11 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> updateState() async {
-    await displayNextFoodPrediction();
-    await displayEatingDays();
-    await displayEatenFoods();
-    await maxBadProgram();
-    await maxGoodProgram();
+    // await displayNextFoodPrediction();
+    // await displayEatingDays();
+    // await displayEatenFoods();
+    // await maxBadProgram();
+    // await maxGoodProgram();
   }
 
   Future<void> maxBadProgram() async {

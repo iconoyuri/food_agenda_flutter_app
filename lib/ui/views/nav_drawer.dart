@@ -30,7 +30,7 @@ class NavDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.photo_camera_back_outlined),
               title: const Text('Image Recognition'),
-              onTap: () => {Navigator.pushNamed(context, '/take/picture')},
+              onTap: () => {Navigator.pushNamed(context, '/recognition')},
             ),
             ListTile(
               leading: const Icon(Icons.fastfood_outlined),

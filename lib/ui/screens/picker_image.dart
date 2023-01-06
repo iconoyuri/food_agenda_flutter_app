@@ -4,20 +4,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:itadakimasu/ui/screens/display_picture_screen.dart';
 import 'dart:io';
 
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({super.key});
+class RecognitionMainScreen extends StatefulWidget {
+  const RecognitionMainScreen({super.key});
 
   @override
-  State<TakePictureScreen> createState() => _TakePictureScreenState();
+  State<RecognitionMainScreen> createState() => _RecognitionMainScreenState();
 }
 
-class _TakePictureScreenState extends State<TakePictureScreen> {
+class _RecognitionMainScreenState extends State<RecognitionMainScreen> {
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
 
       final imageFinal = File(image.path);
+      print("tesd");
       setState(() {
         Navigator.push(
             context,
@@ -31,8 +32,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Hey wtf !");
     return Scaffold(
-      appBar: AppBar(title: Text("Food recognition")),
+      appBar: AppBar(title: const Text("Food recognition")),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +59,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
