@@ -1,11 +1,9 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 import 'dart:math' as math;
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatefulWidget {
@@ -22,20 +20,24 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     print("building");
-    sendImageForPrediction(widget.image);
     return Scaffold(
-        appBar: AppBar(title: const Text('Food recognition')),
-        body: Stack(
-          children: [Image.file(widget.image), ...boxes],
-        ));
+      appBar: AppBar(title: const Text('Food recognition')),
+      body: Stack(
+        children: [Image.file(widget.image), ...boxes],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {sendImageForPrediction(widget.image, context)},
+        child: const Icon(Icons.rounded_corner_sharp),
+      ),
+    );
   }
   // body: Image.file(widget.image),
 
-  void sendImageForPrediction(File image) async {
+  void sendImageForPrediction(File image, BuildContext context) async {
     var decodedImage = await decodeImageFromList(image.readAsBytesSync());
     int width = decodedImage.width;
     int height = decodedImage.height;
-    String urlInsertImage = 'http://192.168.165.127:5000/detection';
+    String urlInsertImage = 'http://192.168.100.127:5000/detection';
     var request = MultipartRequest("POST", Uri.parse(urlInsertImage));
     request.fields["imageWidth"] = width.toString();
     request.fields["imageHeight"] = height.toString();
@@ -52,11 +54,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         _boxes.add(Positioned.fill(
             child: CustomPaint(
           painter: OpenPainter(
+              width,
+              height,
               prediction["bbox"][0],
               prediction["bbox"][1],
               prediction["bbox"][2],
               prediction["bbox"][3],
-              prediction["label"]),
+              prediction["label"],
+              context),
         )));
       }
       setState(() {
@@ -69,13 +74,24 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 }
 
 class OpenPainter extends CustomPainter {
-  final double xOffset;
-  final double yOffset;
-  final double width;
-  final double height;
-  final String label;
+  late double xOffset;
+  late double yOffset;
+  late double width;
+  late double height;
+  late String label;
 
-  OpenPainter(this.xOffset, this.yOffset, this.width, this.height, this.label);
+  // OpenPainter(this.xOffset, this.yOffset, this.width, this.height, this.label);
+  OpenPainter(int imgWidth, int imgHeight, double xOffset, double yOffset,
+      double width, double height, this.label, BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double xRatio = screenWidth / imgWidth;
+    double yRatio = screenHeight / imgHeight;
+    this.xOffset = xOffset * xRatio;
+    this.yOffset = yOffset * yRatio;
+    this.width = width * xRatio;
+    this.height = width * yRatio;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {

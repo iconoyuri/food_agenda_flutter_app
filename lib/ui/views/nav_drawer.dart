@@ -17,7 +17,7 @@ class NavDrawer extends StatelessWidget {
                       fit: BoxFit.cover,
                       image: AssetImage("assets/images/banner.jpg"))),
               child: Text(
-                'Itadakimasu',
+                'hamaï',
                 style: TextStyle(
                     color: Color.fromARGB(255, 253, 255, 111), fontSize: 25),
               ),

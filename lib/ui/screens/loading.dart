@@ -43,7 +43,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Icon(
-              Icons.fastfood,
+              Icons.ramen_dining_outlined,
               size: 140,
               color: secondaryColor,
             ),
@@ -51,7 +51,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               height: 10,
             ),
             Text(
-              "Itadakimasu",
+              "hamaï",
               style: TextStyle(color: secondaryColor, fontSize: 20),
             ),
             const SizedBox(

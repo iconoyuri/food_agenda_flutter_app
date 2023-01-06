@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: const Text("Itadakimasu"),
+        title: const Text("hamaï"),
       ),
       body: RefreshIndicator(
         onRefresh: updateState,
@@ -123,10 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {Navigator.pushNamed(context, '/take/picture')},
-        child: const Icon(Icons.photo_camera),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => {Navigator.pushNamed(context, '/take/picture')},
+      //   child: const Icon(Icons.photo_camera),
+      // ),
     );
   }
 }
