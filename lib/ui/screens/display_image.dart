@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:itadakimasu/src/image_painter.dart';
-
-import '../../services/storage.dart';
+import 'package:itadakimasu/services/storage.dart';
 
 class DisplayImage extends StatefulWidget {
   DisplayImage({Key? key, required this.image}) : super(key: key);
@@ -17,30 +16,29 @@ class DisplayImage extends StatefulWidget {
 class _DisplayImageState extends State<DisplayImage> {
   final _imageKey = GlobalKey<ImagePainterState>();
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _label = TextEditingController();
+  final TextEditingController _label = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     // String a = _label.value as String;
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: ImagePainter.file(
-            widget.image!,
-            key: _imageKey,
-            scalable: true,
-            initialStrokeWidth: 2,
-            textDelegate: TextDelegate(),
-            initialColor: Colors.green,
-            initialPaintMode: PaintMode.freeStyle,
-            onDrawingEnd: _registerDialog(),
-          ),
+        child: ImagePainter.file(
+          widget.image!,
+          key: _imageKey,
+          scalable: true,
+          initialStrokeWidth: 2,
+          textDelegate: TextDelegate(),
+          initialColor: Colors.green,
+          initialPaintMode: PaintMode.rect,
+          onDrawingEnd: _registerDialog(),
         ),
       ),
     );
   }
 
   AlertDialog _registerDialog() {
+    // print("drawing");
     return AlertDialog(
       title: const Text(
         "Name the selection",
