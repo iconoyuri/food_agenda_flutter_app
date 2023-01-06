@@ -35,7 +35,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     var decodedImage = await decodeImageFromList(image.readAsBytesSync());
     int width = decodedImage.width;
     int height = decodedImage.height;
-    String urlInsertImage = 'http://192.168.104.127:5000/detection';
+    String urlInsertImage = 'http://192.168.165.127:5000/detection';
     var request = MultipartRequest("POST", Uri.parse(urlInsertImage));
     request.fields["imageWidth"] = width.toString();
     request.fields["imageHeight"] = height.toString();

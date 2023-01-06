@@ -32,11 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> updateState() async {
-    // await displayNextFoodPrediction();
-    // await displayEatingDays();
-    // await displayEatenFoods();
-    // await maxBadProgram();
-    // await maxGoodProgram();
+    await displayNextFoodPrediction();
+    await displayEatingDays();
+    await displayEatenFoods();
+    await maxBadProgram();
+    await maxGoodProgram();
   }
 
   Future<void> maxBadProgram() async {
@@ -86,10 +86,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> displayNextFoodPrediction() async {
-    String _nextFood = await DatabaseLogic.predictDayMeal();
-    setState(() {
-      nextFood = _nextFood;
-    });
+    try {
+      String _nextFood = await DatabaseLogic.predictDayMeal();
+      setState(() {
+        nextFood = _nextFood;
+      });
+    } on Error {
+      setState(() {
+        nextFood = "[Unresolvable]";
+      });
+    } on Exception {
+      setState(() {
+        nextFood = "[Unresolvable]";
+      });
+    }
   }
 
   @override
