@@ -18,9 +18,9 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> loadAssets(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 3), (() {
-      Navigator.pushReplacementNamed(context, '/home');
-    }));
+    // await Future.delayed(const Duration(seconds: 3), (() {
+    //   Navigator.pushReplacementNamed(context, '/home');
+    // }));
   }
 
   @override
@@ -30,11 +30,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color? secondaryColor = const Color.fromARGB(255, 255, 238, 0);
+    Color? secondaryColor = const Color.fromARGB(255, 0, 0, 0);
     loadAssets(context);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 87, 86, 80),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
           child: Container(
         margin: const EdgeInsets.all(0),
@@ -42,17 +42,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              Icons.ramen_dining_outlined,
-              size: 140,
-              color: secondaryColor,
+            const SizedBox(
+              height: 50,
+            ),
+            Image.asset(
+              "assets/images/diet.png",
+              width: 150,
+              height: 150,
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Text(
               "hamaï",
-              style: TextStyle(color: secondaryColor, fontSize: 20),
+              style: TextStyle(
+                  color: secondaryColor,
+                  fontFamily: 'QanelasSoft',
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 50,
