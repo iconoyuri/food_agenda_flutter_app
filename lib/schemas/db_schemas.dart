@@ -11,6 +11,7 @@ class Food {
     // required this.id,
     required this.name,
   });
+
   Map<String, dynamic> toMap() {
     return {
       // 'id': id,
@@ -33,6 +34,52 @@ class Food {
     final List<Map<String, dynamic>> list =
         await db.query("Food", where: 'name = "$name"');
     return list[0]["id"];
+  }
+}
+
+class User {
+  final String name;
+  final int age;
+  final int height;
+  final int weight;
+
+  const User({
+    required this.name,
+    required this.age,
+    required this.height,
+    required this.weight,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      // 'id': id,
+      'name': name,
+      'age': age,
+      'height': height,
+      'weight': weight,
+    };
+  }
+
+  Future<void> insertDatabase() async {
+    // Get a reference to the database.
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+    // In this case, replace any previous data.
+    await db.insert(
+      'User',
+      toMap(),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
+
+  static Future<bool> existsUser() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+    return (await db.query('user')).isNotEmpty;
   }
 }
 

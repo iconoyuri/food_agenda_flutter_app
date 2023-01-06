@@ -7,6 +7,7 @@ import 'package:itadakimasu/ui/screens/loading.dart';
 import 'package:itadakimasu/ui/screens/food_recognition_main_screen.dart';
 import 'package:itadakimasu/ui/screens/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
+import 'package:itadakimasu/ui/screens/registration_screen.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -21,7 +22,7 @@ Future<void> main() async {
       '/': ((context) => const LoadingScreen()),
       '/home': ((context) => const HomeScreen()),
       '/recognition': ((context) => const RecognitionMainScreen()),
-      // '/display/picture': ((context) => const DisplayPictureScreen()),
+      '/registration': ((context) => const RegistrationScreen()),
       '/annotation': ((context) => const PickerImage()),
       '/save/meal': ((context) => const RegisterFood()),
     },
@@ -34,6 +35,15 @@ Future<void> createDatabase() async {
     join(await getDatabasesPath(), 'food_recommendation.db'),
     onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.
+      db.execute(
+        '''
+          CREATE TABLE User(
+            name TEXT NOT NULL UNIQUE,
+            age INTEGER NOT NULL,
+            height INTEGER NOT NULL,
+            weight INTEGER NOT NULL
+          ); ''',
+      );
       db.execute(
         '''
            CREATE TABLE HealthProblem(
