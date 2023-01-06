@@ -8,6 +8,7 @@ import 'package:itadakimasu/ui/screens/food_recognition_main_screen.dart';
 import 'package:itadakimasu/ui/screens/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
 import 'package:itadakimasu/ui/screens/registration_screen.dart';
+import 'package:itadakimasu/ui/screens/welcome_screen.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -18,11 +19,11 @@ Future<void> main() async {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      // TODO : change this route to "/"
       '/': ((context) => const LoadingScreen()),
+      '/welcome': ((context) => const WelcomeScreen()),
+      '/registration': ((context) => const RegistrationScreen()),
       '/home': ((context) => const HomeScreen()),
       '/recognition': ((context) => const RecognitionMainScreen()),
-      '/registration': ((context) => const RegistrationScreen()),
       '/annotation': ((context) => const PickerImage()),
       '/save/meal': ((context) => const RegisterFood()),
     },

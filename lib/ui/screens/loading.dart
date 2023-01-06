@@ -22,12 +22,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> loadAssets(BuildContext context) async {
     determineUserExistence();
-    await Future.delayed(const Duration(seconds: 3), (() {
+    await Future.delayed(const Duration(seconds: 5), (() {
       if (existsUser) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
-        print("No user registered yet");
-        Navigator.pushReplacementNamed(context, '/registration');
+        Navigator.pushReplacementNamed(context, '/welcome');
       }
     }));
   }
