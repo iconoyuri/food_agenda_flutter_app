@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:itadakimasu/ui/screens/display_picture_screen.dart';
+import 'package:itadakimasu/ui/screens/image_annotation/display_image.dart';
 import 'dart:io';
 
-class RecognitionMainScreen extends StatefulWidget {
-  const RecognitionMainScreen({super.key});
+class PickerImage extends StatefulWidget {
+  const PickerImage({super.key});
 
   @override
-  State<RecognitionMainScreen> createState() => _RecognitionMainScreenState();
+  State<PickerImage> createState() => _PickerImageState();
 }
 
-class _RecognitionMainScreenState extends State<RecognitionMainScreen> {
+class _PickerImageState extends State<PickerImage> {
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
 
       final imageFinal = File(image.path);
-      print("tesd");
       setState(() {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(image: imageFinal)));
+                builder: (context) => DisplayImage(image: imageFinal)));
       });
     } on PlatformException catch (e) {
       print("Failed to pick image $e");
@@ -32,9 +31,8 @@ class _RecognitionMainScreenState extends State<RecognitionMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Hey wtf !");
     return Scaffold(
-      appBar: AppBar(title: const Text("Food recognition")),
+      appBar: AppBar(title: Text("Image Annotation")),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +57,7 @@ class _RecognitionMainScreenState extends State<RecognitionMainScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Container(

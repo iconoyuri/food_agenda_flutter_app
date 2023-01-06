@@ -4,8 +4,8 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:itadakimasu/ui/screens/home.dart';
 import 'package:itadakimasu/ui/screens/first_screens/loading.dart';
-import 'package:itadakimasu/ui/screens/food_recognition_main_screen.dart';
-import 'package:itadakimasu/ui/screens/picker_image.dart';
+import 'package:itadakimasu/ui/screens/image_recognition/food_recognition_main_screen.dart';
+import 'package:itadakimasu/ui/screens/image_annotation/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
 import 'package:itadakimasu/ui/screens/first_screens/registration_screen.dart';
 import 'package:itadakimasu/ui/screens/first_screens/welcome_screen.dart';
