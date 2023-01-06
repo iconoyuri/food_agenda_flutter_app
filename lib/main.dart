@@ -3,12 +3,12 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:itadakimasu/ui/screens/home.dart';
-import 'package:itadakimasu/ui/screens/loading.dart';
+import 'package:itadakimasu/ui/screens/first_screens/loading.dart';
 import 'package:itadakimasu/ui/screens/food_recognition_main_screen.dart';
 import 'package:itadakimasu/ui/screens/picker_image.dart';
 import 'package:itadakimasu/ui/screens/register_food.dart';
-import 'package:itadakimasu/ui/screens/registration_screen.dart';
-import 'package:itadakimasu/ui/screens/welcome_screen.dart';
+import 'package:itadakimasu/ui/screens/first_screens/registration_screen.dart';
+import 'package:itadakimasu/ui/screens/first_screens/welcome_screen.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
