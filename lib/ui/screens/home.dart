@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String userName = "User";
   List<Map<String, dynamic>> daysList = [];
   List<Map<String, dynamic>> eatenFoods = [];
+  List<GDPData> means = [];
   double imc = 0;
 
   @override
@@ -47,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     displayPreferedFood();
     displayEatingDay();
     displayUserName();
+    displayMeans();
   }
 
   Future<void> displayIMC() async {
@@ -129,6 +131,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> displayMeans() async {
+    List<GDPData> _means = await DatabaseLogic.getMeans();
+    setState(() {
+      means = _means;
+    });
+  }
+
   Future<void> displayNextFoodPrediction() async {
     try {
       String _nextFood = await DatabaseLogic.predictDayMeal();
@@ -167,7 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
               imc: imc,
               preferedFood: preferedFood,
               eatingDay: eatingDay,
-              userName: userName),
+              userName: userName,
+              means: means),
         ),
       ),
     );
@@ -185,7 +195,8 @@ class HomeListView extends StatefulWidget {
       required this.imc,
       required this.preferedFood,
       required this.eatingDay,
-      required this.userName})
+      required this.userName,
+      required this.means})
       : super(key: key);
 
   final String nextFood;
@@ -193,6 +204,7 @@ class HomeListView extends StatefulWidget {
   final String maxGoodPrescription;
   final List<Map<String, dynamic>> daysList;
   final List<Map<String, dynamic>> eatenFoods;
+  final List<GDPData> means;
   final double imc;
   final String preferedFood;
   final String eatingDay;
@@ -244,8 +256,8 @@ class _HomeListViewState extends State<HomeListView> {
                 )
               ]),
             ),
-            const SizedBox(
-              height: 20,
+            const Divider(
+              height: 40,
             ),
             SizedBox(
               width: double.infinity,
@@ -267,27 +279,50 @@ class _HomeListViewState extends State<HomeListView> {
             const SizedBox(
               height: 30,
             ),
-            const Text("What you will eat today is:",
-                style: TextStyle(
-                    fontSize: 18,
-                    // fontStyle: FontStyle.italic,
-                    fontFamily: 'QanelasSoft')),
-            Text(widget.nextFood,
-                style: const TextStyle(
-                    fontSize: 68,
-                    color: Colors.amber,
-                    fontFamily: 'QanelasSoft')),
-            EatingHabitsChart(
-              daysList: widget.daysList,
-              chartTitle: 'Meals per day',
+            Container(
+              width: double.infinity,
+              child: Column(children: <Widget>[
+                const Text("What you will eat today is:",
+                    style: TextStyle(
+                        fontSize: 23,
+                        // fontStyle: FontStyle.italic,
+                        fontFamily: 'QanelasSoft')),
+                Text(widget.nextFood,
+                    style: const TextStyle(
+                        fontSize: 68,
+                        color: Colors.amber,
+                        fontFamily: 'QanelasSoft')),
+              ]),
             ),
-            EatingHabitsChart(
-              daysList: widget.eatenFoods,
-              chartTitle: 'Most eaten foods',
+            const Divider(
+              height: 40,
+            ),
+            const Text("Diagrams",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'QanelasSoft')),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 150,
+              child: Row(children: <Widget>[
+                EatingHabitsChart(
+                  daysList: widget.daysList,
+                  chartTitle: 'Meals per day',
+                ),
+                EatingHabitsChart(
+                  daysList: widget.eatenFoods,
+                  chartTitle: 'Most eaten foods',
+                ),
+              ]),
             ),
             const SizedBox(
               height: 20,
             ),
+            // Text(data)
+            RadialMeansChart(means: widget.means, chartTitle: "Means"),
             const Text("The max bad food recommendation",
                 style: TextStyle(
                     fontSize: 18,

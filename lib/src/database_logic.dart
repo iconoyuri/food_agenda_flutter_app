@@ -39,7 +39,10 @@ class DatabaseLogic {
       '''
           SELECT name, COUNT(name)
           FROM _Day
-          JOIN Meal
+          JOIN (
+            SELECT * 
+            FROM Meal
+          )
           ON id = id_day
           GROUP BY id
           ORDER BY id ASC
@@ -175,4 +178,61 @@ class DatabaseLogic {
 
     return list[0]["name"];
   }
+
+  static Future<List<Map<String, dynamic>>>
+      foodsToEatDuringWeakPrediction() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<Map<String, dynamic>> list = await db.rawQuery(
+      '''
+          SELECT name 
+          FROM _Day
+          JOIN (
+            SELECT * 
+            FROM Meal
+          )
+          ON id = id_day
+          GROUP BY name
+          ORDER BY COUNT(name) DESC
+      ''',
+    );
+
+    return list[0]["name"];
+  }
+
+  static Future<List<GDPData>> getMeans() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+
+    final List<GDPData> list = [];
+
+    final List<Map<String, dynamic>> list1 = await db.rawQuery(
+      '''
+          SELECT AVG(water_quantity) as value
+          FROM Meal
+      ''',
+    );
+
+    final List<Map<String, dynamic>> list2 = await db.rawQuery(
+      '''
+          SELECT AVG(nb_towel_mvt) as value
+          FROM Meal
+      ''',
+    );
+    list.add(GDPData("Water quantity", list1[0]["value"]));
+    list.add(GDPData("Nb toilet movements", list2[0]["value"]));
+
+    return list;
+  }
+}
+
+class GDPData {
+  final String field;
+  final double value;
+  GDPData(this.field, this.value);
 }

@@ -23,6 +23,7 @@ class _RegisterFoodState extends State<RegisterFood> {
   void saveFormInfos() async {
     if (_formKey.currentState!.validate()) {
       String currentDay = DateFormat('EEEE').format(DateTime.now());
+      currentDay = "Sunday";
       Map infos = {
         "day": currentDay,
         "food_eaten": food_eaten.text,
