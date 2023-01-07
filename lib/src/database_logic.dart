@@ -108,4 +108,16 @@ class DatabaseLogic {
     );
     return list;
   }
+
+  static Future<double> calculateIMC() async {
+    final db = await openDatabase(
+      join(await getDatabasesPath(), 'food_recommendation.db'),
+      version: 1,
+    );
+    final List<Map<String, dynamic>> list = await db.query('user');
+    double userHeight = list[0]["height"] / 100.0;
+    double userWeight = list[0]["weight"] * 1.0;
+    double imc = userWeight / (userHeight * userHeight);
+    return imc;
+  }
 }

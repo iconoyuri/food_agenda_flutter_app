@@ -81,6 +81,8 @@ class User {
     );
     return (await db.query('user')).isNotEmpty;
   }
+
+
 }
 
 class HealthPB {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:itadakimasu/src/database_logic.dart';
 import 'package:itadakimasu/ui/views/nav_drawer.dart';
 import 'package:itadakimasu/ui/views/charts.dart';
+import 'package:itadakimasu/ui/widgets/imc_drawer.dart';
 
 void main() => runApp(const MaterialApp(
       home: HomeScreen(),
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String maxGoodPrescription = "";
   List<Map<String, dynamic>> daysList = [];
   List<Map<String, dynamic>> eatenFoods = [];
+  double imc = 0;
 
   @override
   void initState() {
@@ -32,11 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> updateState() async {
-    await displayNextFoodPrediction();
-    await displayEatingDays();
-    await displayEatenFoods();
-    await maxBadProgram();
-    await maxGoodProgram();
+    displayIMC();
+    displayNextFoodPrediction();
+    displayEatingDays();
+    displayEatenFoods();
+    maxBadProgram();
+    maxGoodProgram();
+  }
+
+  Future<void> displayIMC() async {
+    double _imc = await DatabaseLogic.calculateIMC();
+    setState(() {
+      imc = _imc;
+    });
   }
 
   Future<void> maxBadProgram() async {
@@ -120,13 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
             eatenFoods: eatenFoods,
             maxBadPrescription: maxBadPrescription,
             maxGoodPrescription: maxGoodPrescription,
+            imc: imc,
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => {Navigator.pushNamed(context, '/take/picture')},
-      //   child: const Icon(Icons.photo_camera),
-      // ),
     );
   }
 }
@@ -138,7 +145,8 @@ class HomeListView extends StatefulWidget {
       required this.maxBadPrescription,
       required this.maxGoodPrescription,
       required this.daysList,
-      required this.eatenFoods})
+      required this.eatenFoods,
+      required this.imc})
       : super(key: key);
 
   final String nextFood;
@@ -146,6 +154,7 @@ class HomeListView extends StatefulWidget {
   final String maxGoodPrescription;
   final List<Map<String, dynamic>> daysList;
   final List<Map<String, dynamic>> eatenFoods;
+  final double imc;
 
   @override
   State<HomeListView> createState() => _HomeListViewState();
@@ -160,6 +169,7 @@ class _HomeListViewState extends State<HomeListView> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            ImcDrawer(imc: widget.imc),
             const Text(
               "Welcome back user",
               style: TextStyle(

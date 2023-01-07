@@ -17,6 +17,7 @@ Future<void> main() async {
   await createDatabase();
 
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
       '/': ((context) => const LoadingScreen()),

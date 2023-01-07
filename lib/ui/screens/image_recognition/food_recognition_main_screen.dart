@@ -32,7 +32,7 @@ class _PickerImageState extends State<PickerImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Image Annotation")),
+      appBar: AppBar(title: const Text("Image Annotation")),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +57,7 @@ class _PickerImageState extends State<PickerImage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
