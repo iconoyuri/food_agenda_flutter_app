@@ -60,16 +60,12 @@ class _RadialMeansChartState extends State<RadialMeansChart> {
   late TooltipBehavior _tooltipBehavior;
   @override
   void initState() {
-    // TODO: implement initState
     _tooltipBehavior = TooltipBehavior(enable: true);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("testes");
-    // print(widget.means);
-    // if (widget.means.isEmpty) return Container();
     return SizedBox(
         width: double.infinity,
         child: SfCircularChart(

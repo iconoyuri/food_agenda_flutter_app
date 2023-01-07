@@ -101,13 +101,19 @@ class DatabaseLogic {
           JOIN (
             SELECT id_food 
             FROM Meal
-            JOIN HealthProblem ON HealthProblem.id = Meal.id_healthPB
+            JOIN (
+              SELECT * 
+              FROM HealthProblem
+            )
+            ON HealthProblem.id = Meal.id_healthPB
             WHERE HealthProblem.name = ''
           )
           ON id = id_food
           GROUP BY name
           ORDER BY COUNT(name) DESC
       ''',
+
+      // On récupère les noms des plats qui ont le moins de chances de causer des problèmes de digestion
     );
     return list;
   }

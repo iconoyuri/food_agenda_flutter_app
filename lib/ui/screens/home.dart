@@ -180,6 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
               means: means),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {},
+        child: Icon(Icons.healing),
+      ),
     );
   }
 }
