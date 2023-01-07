@@ -5,6 +5,7 @@ import 'package:itadakimasu/src/database_logic.dart';
 import 'package:itadakimasu/ui/views/nav_drawer.dart';
 import 'package:itadakimasu/ui/views/charts.dart';
 import 'package:itadakimasu/ui/widgets/imc_drawer.dart';
+import 'package:itadakimasu/ui/widgets/solo_info_card.dart';
 
 void main() => runApp(const MaterialApp(
       home: HomeScreen(),
@@ -23,6 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String nextFood = "";
   String maxBadPrescription = "";
   String maxGoodPrescription = "";
+  String preferedFood = "unknown";
+  String eatingDay = "unknown";
+  String userName = "User";
   List<Map<String, dynamic>> daysList = [];
   List<Map<String, dynamic>> eatenFoods = [];
   double imc = 0;
@@ -40,6 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
     displayEatenFoods();
     maxBadProgram();
     maxGoodProgram();
+    displayPreferedFood();
+    displayEatingDay();
+    displayUserName();
   }
 
   Future<void> displayIMC() async {
@@ -47,6 +54,33 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       imc = _imc;
     });
+  }
+
+  Future<void> displayUserName() async {
+    String username = await DatabaseLogic.getUserName();
+    setState(() {
+      userName = username;
+    });
+  }
+
+  Future<void> displayPreferedFood() async {
+    try {
+      String _preferedFood = await DatabaseLogic.userFavoriteFood();
+      setState(() {
+        preferedFood = _preferedFood;
+      });
+    } on Exception {
+    } on Error {}
+  }
+
+  Future<void> displayEatingDay() async {
+    try {
+      String _eatingDay = await DatabaseLogic.userEatingDay();
+      setState(() {
+        eatingDay = _eatingDay;
+      });
+    } on Exception {
+    } on Error {}
   }
 
   Future<void> maxBadProgram() async {
@@ -123,15 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: updateState,
         child: Container(
           // foregroundDecoration:,
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: HomeListView(
-            nextFood: nextFood,
-            daysList: daysList,
-            eatenFoods: eatenFoods,
-            maxBadPrescription: maxBadPrescription,
-            maxGoodPrescription: maxGoodPrescription,
-            imc: imc,
-          ),
+              nextFood: nextFood,
+              daysList: daysList,
+              eatenFoods: eatenFoods,
+              maxBadPrescription: maxBadPrescription,
+              maxGoodPrescription: maxGoodPrescription,
+              imc: imc,
+              preferedFood: preferedFood,
+              eatingDay: eatingDay,
+              userName: userName),
         ),
       ),
     );
@@ -146,7 +182,10 @@ class HomeListView extends StatefulWidget {
       required this.maxGoodPrescription,
       required this.daysList,
       required this.eatenFoods,
-      required this.imc})
+      required this.imc,
+      required this.preferedFood,
+      required this.eatingDay,
+      required this.userName})
       : super(key: key);
 
   final String nextFood;
@@ -155,6 +194,9 @@ class HomeListView extends StatefulWidget {
   final List<Map<String, dynamic>> daysList;
   final List<Map<String, dynamic>> eatenFoods;
   final double imc;
+  final String preferedFood;
+  final String eatingDay;
+  final String userName;
 
   @override
   State<HomeListView> createState() => _HomeListViewState();
@@ -169,14 +211,59 @@ class _HomeListViewState extends State<HomeListView> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ImcDrawer(imc: widget.imc),
-            const Text(
-              "Welcome back user",
-              style: TextStyle(
-                  fontSize: 28,
-                  // fontStyle: FontStyle.italic,
-                  fontFamily: 'QanelasSoft'),
+            const SizedBox(
+              height: 20,
             ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(children: <Widget>[
+                const Expanded(
+                    flex: 2,
+                    child: Text(
+                      "Welcome back",
+                      style: TextStyle(fontSize: 20),
+                    )),
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        widget.userName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
+                            fontFamily: 'QanelasSoft'),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Icon(Icons.person)
+                    ],
+                  ),
+                )
+              ]),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(children: <Widget>[
+                SoloInfoCard(
+                    label: "Favorite food",
+                    value: widget.preferedFood,
+                    bgColor: const Color.fromARGB(255, 55, 221, 233)),
+                SoloInfoCard(
+                    label: "Eating day",
+                    value: widget.eatingDay,
+                    bgColor: const Color.fromARGB(255, 96, 76, 209))
+              ]),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ImcDrawer(imc: widget.imc),
             const SizedBox(
               height: 30,
             ),
